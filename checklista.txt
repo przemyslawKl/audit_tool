@@ -1,0 +1,13 @@
+Data: 26.09.2026
+
+Wynik: ShellCheck uruchomiony, przeprowadzono analizę skryptu audit.sh.
+
+Uwagi:
+- Wykryto ostrzeżenia SC2129 dotyczące wielu przekierowań do tego samego pliku. Ostrzeżenia mają charakter stylistyczny i nie wpływają na poprawność działania skryptu.
+- Wykryto ostrzeżenia SC2034 dotyczące nieużywanych zmiennych podczas odczytu pliku /etc/passwd. Zmienne pozostawiono celowo dla zachowania czytelności struktury rekordu.
+- Wykryto ostrzeżenie SC2086 dla zmiennej SUID_PATHS w poleceniu find. Zalecono analizę ostrzeżenia.
+
+Wprowadzone poprawki:
+- Nie wprowadzono zmian związanych z ostrzeżeniami SC2129 i SC2034, ponieważ mają charakter stylistyczny i nie wpływają na realizację wymagań laboratorium.
+- Ostrzeżenie SC2086 przeanalizowano. Cytowanie zmiennej SUID_PATHS zgodnie z sugestią ShellCheck spowodowałoby przekazanie wszystkich katalogów jako jednego argumentu do polecenia find, dlatego pozostawiono obecne rozwiązanie.
+- Zweryfikowano poprawne działanie skryptu po analizie ShellCheck.

@@ -1,0 +1,42 @@
+# Porównanie audit.sh i Lynis
+
+## Wersja Lynis
+Lynis nie był dostępny / Lynis wersja X.Y.Z.
+
+## Zakres kontroli
+
+Własny skrypt audit.sh realizuje podstawowy pasywny audyt systemu Linux. Obejmuje informacje o systemie, logowaniach użytkowników, kontach UID 0, konfiguracji SSH, zadaniach cron, plikach SUID oraz dostępnych aktualizacjach.
+
+Lynis wykonuje znacznie szerszy audyt obejmujący konfigurację systemu, usługi, mechanizmy uwierzytelniania, ustawienia bezpieczeństwa oraz wiele dodatkowych kontroli.
+
+## Szczegółowość
+
+audit.sh prezentuje podstawowe informacje i proste komunikaty OK/WARN.
+
+Lynis dostarcza bardziej szczegółowe wyniki oraz zalecenia dotyczące poprawy bezpieczeństwa.
+
+## Uprawnienia
+
+audit.sh został zaprojektowany do działania jako zwykły użytkownik.
+
+Lynis może działać bez uprawnień administratora, jednak pełniejsze wyniki uzyskuje przy podwyższonych uprawnieniach.
+
+## Czas działania
+
+audit.sh wykonuje się szybko.
+
+Lynis potrzebuje więcej czasu ze względu na większą liczbę wykonywanych kontroli.
+
+## Kontrole dostępne w Lynis, których nie ma w audit.sh
+
+- analiza usług systemowych,
+- analiza polityki haseł,
+- kontrola zapory sieciowej,
+- analiza konfiguracji PAM,
+- analiza jądra systemu,
+- analiza logowania i audytu,
+- szersza kontrola konfiguracji sieci.
+
+## Wnioski
+
+audit.sh jest prostym i przejrzystym narzędziem edukacyjnym pozwalającym zrozumieć podstawy audytu bezpieczeństwa. Lynis oferuje znacznie większy zakres kontroli i bardziej szczegółowe wyniki, ale jest również bardziej złożony.

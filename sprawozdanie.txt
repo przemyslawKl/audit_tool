@@ -1,0 +1,223 @@
+
+
+1. Jaką rolę pełni shebang?
+
+Shebang (#!/bin/bash) informuje system, który interpreter ma wykonać skrypt.
+
+2. Dlaczego skrypt powinien działać jako zwykły użytkownik?
+
+Ponieważ jest to audyt pasywny i nie powinien mieć możliwości przypadkowej modyfikacji systemu. Działa zgodnie z zasadą najmniejszych uprawnień.
+
+3. Czym różni się wykonanie pliku od przekazania go do interpretera?
+
+Wykonanie:
+
+- kod - ./audit.sh
+- wymaga poprawnego shebanga
+- wymaga praw do wykonania
+
+Przekazanie do interpretera
+
+- kod - bash audit.sh
+- skrypt uruchomiony w bashu
+- brak wymogu posiadania praw do wykonania pliku
+
+
+4. Dlaczego zmienne ze ścieżkami powinny być cytowane?
+
+Aby Bash traktował całą ścieżkę jako jeden argument, nawet jeśli zawiera spacje lub znaki specjalne.
+
+5. Co powinno się wydarzyć, gdy katalog raportów już istnieje?
+
+Skrypt powinien działać dalej bez błędu. Dlatego używamy:
+
+Shell
+mkdir -p "$REPORT_DIR"
+
+6. Dlaczego kolejne uruchomienie nie powinno nadpisywać poprzedniego raportu?
+
+Ponieważ raporty są dowodami wykonania audytu. Nadpisanie spowodowałoby utratę wcześniejszych wyników.
+
+7. Czy raport zawiera wystarczający kontekst, aby ustalić, gdzie i kiedy został utworzony?
+
+Tak, jeśli zawiera:
+
+nazwę hosta,
+nazwę systemu,
+wersję jądra,
+czas wykonania,
+czas działania systemu,
+użytkownika uruchamiającego skrypt.
+
+Pozwala to określić na jakim komputerze, przez kogo i kiedy został utworzony raport.
+
+
+8. Czym różni się funkcja od komentarza?
+
+Funkcja zawiera instrukcje, które są wykonywane przez skrypt.
+Komentarz służy wyłącznie do opisywania kodu i jest ignorowany przez interpreter Bash.
+
+9. W jaki sposób funkcja odbiera argument?
+
+Argument jest przekazywany podczas wywołania funkcji.
+
+10. Dlaczego powtarzalne formatowanie warto zamknąć w funkcji?
+
+Ponieważ:
+
+kod jest krótszy i bardziej czytelny,
+nie trzeba wielokrotnie pisać tych samych poleceń,
+łatwiej wprowadzać zmiany,
+zmniejsza się ryzyko błędów.
+
+
+11. Dlaczego lista aktywnych sesji różni się od historii logowań?
+
+Lista aktywnych sesji (who) pokazuje tylko użytkowników zalogowanych w tej chwili.
+
+Historia logowań (last) zawiera informacje o logowaniach, które miały miejsce wcześniej, nawet jeśli użytkownik jest już wylogowany.
+
+12. Jak ostatnie logowania wspierają triage incydentu?
+Pozwalają:
+
+ustalić kto logował się do systemu,
+sprawdzić przybliżony czas zdarzenia,
+wykryć nietypowe logowania,
+ustalić czy logowanie pochodziło lokalnie czy zdalnie.
+
+Dzięki temu można odtworzyć przebieg zdarzeń podczas analizy incydentu.
+
+13. Czy brak wyniku jest dowodem braku aktywności?
+Nie.
+
+Brak wpisów może wynikać z:
+
+usuniętych logów,
+rotacji logów,
+uszkodzenia plików dziennika,
+ograniczonych uprawnień użytkownika,
+braku danych w danym źródle.
+
+Brak wyniku nie jest dowodem, że aktywność nie wystąpiła.
+
+14. Jak retencja i rotacja logów wpływają na rezultat?
+System okresowo archiwizuje lub usuwa stare logi.
+
+W rezultacie:
+
+bardzo stare logowania mogą nie być już dostępne,
+raport pokazuje tylko dane, które nadal znajdują się w plikach dziennika,
+im dłużej działa system, tym większe znaczenie ma polityka przechowywania logów.
+
+15. Jakie uprawnienia wynikają z UID 0?
+UID 0 oznacza konto superużytkownika (root), które ma pełne uprawnienia administracyjne do systemu.
+
+16. Które pole pliku /etc/passwd przechowuje UID?
+Trzecie pole ($3), licząc od lewej strony, rozdzielone dwukropkami.
+
+17. Dlaczego wyszukiwanie samego tekstu root byłoby niewystarczające?
+Ponieważ konto o uprawnieniach administracyjnych nie musi nazywać się root.
+
+18. Czym różni się brak wyniku od błędu odczytu?
+Brak wyniku:
+
+plik został poprawnie odczytany,
+nie znaleziono pasujących rekordów.
+
+Błąd odczytu:
+
+plik nie został odczytany,
+nie można wyciągać żadnych wniosków z wyniku,
+problem może wynikać z uprawnień, uszkodzenia pliku lub jego braku.
+
+19. Dlaczego proste wyszukanie nazwy dyrektywy może dać fałszywy wniosek?
+Ponieważ dyrektywa może występować w komentarzu lub być nadpisana w innym miejscu konfiguracji. Samo znalezienie tekstu nie oznacza, że ustawienie jest aktywne.
+
+20. Czym różni się komentarz od aktywnego ustawienia?
+Komentarz zaczyna się od znaku # i jest ignorowany przez program. Aktywne ustawienie jest interpretowane przez usługę i wpływa na jej działanie.
+
+21. Jak pliki dołączane do konfiguracji wpływają na wynik?
+Dodatkowe pliki mogą zmieniać lub nadpisywać ustawienia z głównego pliku konfiguracyjnego, więc analiza jednego pliku może być niepełna.
+
+22. Dlaczego brak wykrytej wartości nie jest pełnym audytem usługi?
+Ponieważ rzeczywista konfiguracja może pochodzić z innych plików lub ustawień ładowanych przez SSH.
+
+23. Dlaczego zadania cron są ważne podczas audytu bezpieczeństwa?
+Pozwalają wykryć automatycznie uruchamiane skrypty i programy, które mogą wpływać na bezpieczeństwo systemu.
+
+24. Jak mogą służyć do utrzymania dostępu albo cyklicznego uruchamiania kodu?
+Osoba atakująca może dodać zadanie cron uruchamiające określony program lub skrypt w regularnych odstępach czasu.
+
+25. Dlaczego brak uprawnień do odczytu nie oznacza braku crontaba?
+Może istnieć crontab, ale bieżący użytkownik nie ma prawa go odczytać.
+
+26. Jak zwiększone uprawnienia zmieniają ryzyko uruchomienia całego skryptu?
+Każdy błąd lub niepożądane działanie skryptu będzie wykonywane z większymi uprawnieniami, co zwiększa potencjalne skutki problemu.
+
+27. Jak działa bit SUID?
+Program uruchamiany z bitem SUID działa z uprawnieniami właściciela pliku zamiast użytkownika, który go uruchomił.
+
+28. Dlaczego może mieć znaczenie dla eskalacji uprawnień?
+Nieprawidłowo zabezpieczony program SUID może pozwolić zwykłemu użytkownikowi uzyskać wyższe uprawnienia.
+
+29. Jaka jest różnica między przeszukiwaniem typowych katalogów i całego systemu?
+Przeszukiwanie typowych katalogów jest szybsze, ale może pominąć nietypowe lokalizacje. Przeszukiwanie całego systemu jest dokładniejsze, lecz trwa dłużej.
+
+30. Jak przekierowanie błędów wpływa na widoczność ograniczeń kontroli?
+Może ukryć komunikaty o braku dostępu. Dlatego błędy powinny być zapisywane lub raportowane, a nie całkowicie ignorowane.
+
+31. Dlaczego przed użyciem narzędzia sprawdzamy jego dostępność?
+Aby skrypt działał poprawnie także w systemach, gdzie dane narzędzie nie jest zainstalowane.
+
+32. Czy pakiet możliwy do aktualizacji jest automatycznie podatny?
+Nie. Aktualizacja może zawierać nowe funkcje, poprawki błędów lub usprawnienia, a nie tylko poprawki bezpieczeństwa.
+
+33. Od czego zależy aktualność wyświetlonej listy?
+Od aktualności lokalnych informacji o repozytoriach i pakietach.
+
+34. Jak należałoby dostosować kontrolę do innej rodziny dystrybucji?
+Należałoby użyć odpowiedniego menedżera pakietów, np. dnf, yum, pacman lub zypper.
+
+35. Czym różni się raport audytowy od logu technicznego skryptu?
+Raport zawiera wyniki audytu systemu, a log techniczny informacje o działaniu samego skryptu.
+
+36. Kiedy stosować poziomy INFO, WARN i ERROR?
+INFO: zwykłe informacje o przebiegu działania.
+WARN: sytuacje ograniczające kontrolę lub wymagające uwagi.
+ERROR: błędy uniemożliwiające wykonanie części audytu.
+
+37. Dlaczego czas wpisu powinien zawierać strefę albo przesunięcie?
+Ułatwia to poprawną interpretację zdarzeń na systemach działających w różnych strefach czasowych.
+
+38. Jak zapobiec niekontrolowanemu wzrostowi logu w rozwiązaniu produkcyjnym?
+Stosując rotację logów, archiwizację lub usuwanie starych wpisów.
+
+39. Dlaczego warto używać ShellCheck?
+Pomaga wykrywać błędy składniowe, problemy ze zmiennymi i niebezpieczne konstrukcje przed uruchomieniem skryptu.
+
+40. Dlaczego nie należy bezmyślnie wyciszać ostrzeżeń?
+Można w ten sposób ukryć rzeczywiste problemy, które później doprowadzą do błędów.
+
+41. Dlaczego po poprawkach należy ponownie uruchomić skrypt?
+Aby sprawdzić, czy zmiany nie spowodowały nowych problemów.
+
+42. Dlaczego warto łączyć analizę statyczną z testami działania?
+Ponieważ skrypt może być poprawny składniowo, ale nadal działać niezgodnie z oczekiwaniami.
+
+43. Czy większa liczba ostrzeżeń oznacza gorszy system?
+Nie. Może wynikać z szerszego zakresu kontroli lub bardziej szczegółowej analizy.
+
+44. Dlaczego wynik narzędzia nadal wymaga interpretacji?
+Narzędzie wskazuje potencjalne problemy, ale człowiek musi ocenić ich znaczenie i kontekst.
+
+45. Jak zakres i cel narzędzia wpływają na liczbę wykryć?
+Im więcej obszarów analizuje narzędzie, tym większa liczba potencjalnych wykryć i ostrzeżeń.
+
+46. Dlaczego nie należy uruchamiać LinPEAS na systemie produkcyjnym bez wyraźnej autoryzacji?
+Ponieważ wykonuje bardzo szerokie rozpoznanie systemu, które może naruszać polityki bezpieczeństwa organizacji.
+
+47. Czy znalezienie potencjalnej ścieżki eskalacji oznacza, że została wykorzystana?
+Nie. Oznacza jedynie możliwość wykorzystania w określonych warunkach.
+
+48. Kiedy własny ograniczony skrypt jest lepszym wyborem niż rozbudowane narzędzie?
+Gdy potrzebny jest niewielki, przejrzysty i w pełni zrozumiały audyt o ściśle określonym zakresie.

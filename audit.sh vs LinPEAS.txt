@@ -1,0 +1,38 @@
+# Porównanie audit.sh i LinPEAS
+
+## Przeznaczenie
+
+Mój skrypt audit.sh wykonuje pasywny audyt systemu Linux. Zbiera podstawowe informacje o systemie, użytkownikach, konfiguracji SSH, zadaniach cron, plikach SUID oraz dostępnych aktualizacjach.
+
+LinPEAS jest narzędziem służącym do szerokiego wyszukiwania potencjalnych ścieżek eskalacji uprawnień i błędnych konfiguracji systemu.
+
+## Pasywny audyt a wyszukiwanie ścieżek eskalacji
+
+audit.sh odczytuje wybrane informacje i zapisuje je w raporcie. Nie próbuje aktywnie wyszukiwać wszystkich możliwych sposobów uzyskania wyższych uprawnień.
+
+LinPEAS analizuje wiele dodatkowych obszarów systemu pod kątem potencjalnych możliwości eskalacji uprawnień oraz błędów konfiguracji.
+
+## Zalety własnego skryptu
+
+- krótki i czytelny kod,
+- łatwo zrozumieć działanie każdej instrukcji,
+- znany zakres wykonywanych operacji,
+- łatwo zweryfikować bezpieczeństwo działania,
+- niewielki czas wykonania,
+- brak zależności od zewnętrznego kodu.
+
+## Ryzyko uruchamiania rozbudowanego obcego skryptu
+
+- trudniejsza analiza całego kodu,
+- większy zakres wykonywanych operacji,
+- możliwość wystąpienia błędów lub niepożądanego działania,
+- konieczność zaufania źródłu pochodzenia narzędzia,
+- większe ryzyko przy uruchamianiu z podwyższonymi uprawnieniami.
+
+## Znaczenie autoryzacji, przeglądu kodu i weryfikacji źródła
+
+Przed uruchomieniem narzędzia należy posiadać odpowiednią autoryzację. Warto przeprowadzić przegląd kodu oraz upewnić się, że narzędzie pochodzi z zaufanego źródła. Dodatkową ochronę stanowi sprawdzenie sum kontrolnych plików przed uruchomieniem.
+
+## Wnioski
+
+audit.sh jest prostym narzędziem edukacyjnym pozwalającym zrozumieć podstawowe techniki audytu systemu Linux. LinPEAS zapewnia znacznie szerszy zakres analizy, ale wymaga większego zaufania do kodu oraz ostrożności podczas uruchamiania.
