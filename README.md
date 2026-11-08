@@ -60,11 +60,8 @@ work/
 ├── report-review.md
 
 └── reports/
-
     ├── audit.log
-    
     ├── audit-host1-20260923-183001.txt
-    
     └── audit-host1-20260923-183745.txt
 
 
